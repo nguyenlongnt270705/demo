@@ -23,4 +23,8 @@ public class UserService {
     public List<User> fetchAllUser() {
         return this.userRepository.findAll();
     }
+
+    public void deleteUser(Long id) {
+        this.userRepository.deleteById(id);
+    }
 }

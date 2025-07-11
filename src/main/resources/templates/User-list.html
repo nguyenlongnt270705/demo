@@ -7,17 +7,37 @@
 <body>
     <div class="container">
         <h1>User List</h1>
+
+        <!-- Add User Form -->
+        <div class="add-user-form">
+            <h2>Add New User</h2>
+            <form action="/users" method="POST">
+                <div class="form-group">
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" name="name" required>  
+                </div>
+                <button type="submit" class="btn-submit">Add User</button>
+            </form>
+        </div>
+        
         <table class="table">
             <thead>
                 <tr>
                     <th>ID</th>
                     <th>Name</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
                 <tr th:each="user : ${users}">
                     <td th:text="${user.id}"></td>
                     <td th:text="${user.name}"></td>
+                    <td>
+                        <form th:action="@{/users/{id}(id=${user.id})}" method="POST" style="display: inline;">
+                            <input type="hidden" name="_method" value="DELETE" />
+                            <button type="submit" class="btn-delete">Delete</button>
+                        </form>
+                    </td>
                 </tr>
             </tbody>
         </table>

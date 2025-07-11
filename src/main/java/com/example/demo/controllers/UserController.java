@@ -6,7 +6,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -25,10 +28,17 @@ public class UserController {
         this.userService = userService;
     }
 
+    // @PostMapping("/users")
+    // public ResponseEntity<User> createUser(@RequestBody User user) {
+    //     User createdUser = this.userService.createUser(user);
+    //     return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
+    // }
     @PostMapping("/users")
-    public ResponseEntity<User> createUser(@RequestBody User user) {
-        User createdUser = this.userService.createUser(user);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
+    public String createUser(@ModelAttribute User user) {
+
+        user.setId(null);
+        this.userService.createUser(user);
+        return "redirect:/users";
     }
 
     @GetMapping("/users")
@@ -41,4 +51,10 @@ public class UserController {
     // public ResponseEntity<List<User>> getAllUsers() {
     //     return ResponseEntity.status(HttpStatus.OK).body(this.userService.fetchAllUser());
     // }
+
+    @DeleteMapping("/users/{id}")
+    public String deleteUser(@PathVariable Long id) {
+        this.userService.deleteUser(id);
+        return "redirect:/users";
+    }
 }
