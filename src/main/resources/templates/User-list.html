@@ -33,6 +33,7 @@
                     <td th:text="${user.id}"></td>
                     <td th:text="${user.name}"></td>
                     <td>
+                        <a th:href="@{/users/{id}/edit(id=${user.id})}" class="btn-edit">Edit</a>
                         <form th:action="@{/users/{id}(id=${user.id})}" method="POST" style="display: inline;">
                             <input type="hidden" name="_method" value="DELETE" />
                             <button type="submit" class="btn-delete">Delete</button>
@@ -41,6 +42,17 @@
                 </tr>
             </tbody>
         </table>
+
+        <!-- Pagination -->
+        <div class="pagination" th:if="${totalPages > 0}">
+            <a th:if="${currentPage > 1}" th:href="@{/users(page=${currentPage - 1})}" class="page-link">&laquo; Previous</a>
+            <span th:each="i : ${#numbers.sequence(1, totalPages)}">
+                <a th:href="@{/users(page=${i})}" 
+                   th:text="${i}" 
+                   th:class="${currentPage == i ? 'page-link active' : 'page-link'}"></a>
+            </span>
+            <a th:if="${currentPage < totalPages}" th:href="@{/users(page=${currentPage + 1})}" class="page-link">Next &raquo;</a>
+        </div>
     </div>
 </body>
 </html>
