@@ -1,7 +1,6 @@
 package com.example.demo.controllers;
 
 import org.springframework.data.domain.Page;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -9,11 +8,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.demo.models.User;
-
 import com.example.demo.services.UserService;
 
 @Controller
@@ -28,8 +25,10 @@ public class UserController {
 
     @PostMapping("/users")
     public String createUser(@ModelAttribute User user) {
-
         user.setId(null);
+        user.setUsername(user.getName()); // Set a default username same as name
+        user.setPassword("default123"); // Set a default password
+        user.setRole("ROLE_USER"); // Set default role
         this.userService.createUser(user);
         return "redirect:/users";
     }
