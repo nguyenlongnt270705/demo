@@ -1,22 +1,29 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <title>User List</title>
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
     <div class="container">
-        <!-- Thêm nút đăng xuất ở đầu trang -->
+        <!-- Header với thông tin user và nút đăng xuất -->
         <div class="header-actions">
-            <form th:action="@{/logout}" method="POST" style="text-align: right;">
-                <button type="submit" class="btn-logout">Đăng xuất</button>
-            </form>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span sec:authentication="name">Welcome, User</span>
+                <div>
+                    <!-- Nút quản lý accounts cho SUPER_ADMIN -->
+                    <a sec:authorize="hasRole('SUPER_ADMIN')" href="/accounts" class="btn-action btn-edit" style="margin-right: 10px;">Quản lý Accounts</a>
+                    <form th:action="@{/logout}" method="POST" style="display: inline;">
+                        <button type="submit" class="btn-logout">Đăng xuất</button>
+                    </form>
+                </div>
+            </div>
         </div>
 
         <h1>User List</h1>
 
-        <!-- Add User Form -->
-        <div class="add-user-form">
+        <!-- Add User Form - chỉ ADMIN mới thấy -->
+        <div class="add-user-form" sec:authorize="hasRole('ADMIN')">
             <h2>Add New User</h2>
             <form action="/users" method="POST">
                 <div class="form-group">
@@ -32,14 +39,19 @@
                 <tr>
                     <th>ID</th>
                     <th>Name</th>
-                    <th>Action</th>
+                    <th>Username</th>
+                    <th>Role</th>
+                    <th sec:authorize="hasRole('ADMIN')">Action</th>
                 </tr>
             </thead>
             <tbody>
                 <tr th:each="user : ${users}">
                     <td th:text="${user.id}"></td>
                     <td th:text="${user.name}"></td>
-                    <td>
+                    <td th:text="${user.username}"></td>
+                    <td th:text="${user.role}"></td>
+                    <!-- Chỉ ADMIN mới thấy nút Edit/Delete -->
+                    <td sec:authorize="hasRole('ADMIN')">
                         <a th:href="@{/users/{id}/edit(id=${user.id})}" class="btn-action btn-edit">Edit</a>
                         <form th:action="@{/users/{id}(id=${user.id})}" method="POST" style="display: inline;">
                             <input type="hidden" name="_method" value="DELETE" />

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Account Management</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header-actions">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <a href="/users" class="btn-action btn-edit">Về User List</a>
+                <form th:action="@{/logout}" method="POST" style="display: inline;">
+                    <button type="submit" class="btn-logout">Đăng xuất</button>
+                </form>
+            </div>
+        </div>
+
+        <h1>Account Management</h1>
+
+        <!-- Add Account Form -->
+        <div class="add-user-form">
+            <h2>Add New Account</h2>
+            <form action="/accounts" method="POST">
+                <div class="form-group">
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" name="name" required>  
+                </div>
+                <div class="form-group">
+                    <label for="role">Role:</label>
+                    <select id="role" name="role" required>
+                        <option value="ROLE_USER">User</option>
+                        <option value="ROLE_ADMIN">Admin</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-submit">Add Account</button>
+            </form>
+        </div>
+        
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Username</th>
+                    <th>Role</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="user : ${users}">
+                    <td th:text="${user.id}"></td>
+                    <td th:text="${user.name}"></td>
+                    <td th:text="${user.username}"></td>
+                    <td th:text="${user.role}"></td>
+                    <td>
+                        <a th:href="@{/accounts/{id}/edit(id=${user.id})}" class="btn-action btn-edit">Edit</a>
+                        <form th:action="@{/accounts/{id}(id=${user.id})}" method="POST" style="display: inline;">
+                            <input type="hidden" name="_method" value="DELETE" />
+                            <button type="submit" class="btn-action btn-delete">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
